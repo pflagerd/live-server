@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-var path = require('path');
-var fs = require('fs');
-var assign = require('object-assign');
-var liveServer = require("./index");
+let path = require('path');
+let fs = require('fs');
+let assign = require('object-assign');
+let liveServer = require("./index");
 
-var opts = {
+let opts = {
 	host: process.env.IP,
 	port: process.env.PORT,
 	open: true,
@@ -14,19 +14,19 @@ var opts = {
 	logLevel: 2,
 };
 
-var homeDir = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
-var configPath = path.join(homeDir, '.live-server.json');
+let homeDir = process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
+let configPath = path.join(homeDir, '.live-server.json');
 if (fs.existsSync(configPath)) {
-	var userConfig = fs.readFileSync(configPath, 'utf8');
+	let userConfig = fs.readFileSync(configPath, 'utf8');
 	assign(opts, JSON.parse(userConfig));
 	if (opts.ignorePattern) opts.ignorePattern = new RegExp(opts.ignorePattern);
 }
 
-for (var i = process.argv.length - 1; i >= 2; --i) {
-	var arg = process.argv[i];
+for (let i = process.argv.length - 1; i >= 2; --i) {
+	let arg = process.argv[i];
 	if (arg.indexOf("--port=") > -1) {
-		var portString = arg.substring(7);
-		var portNumber = parseInt(portString, 10);
+		let portString = arg.substring(7);
+		let portNumber = parseInt(portString, 10);
 		if (portNumber === +portString) {
 			opts.port = portNumber;
 			process.argv.splice(i, 1);
@@ -37,7 +37,7 @@ for (var i = process.argv.length - 1; i >= 2; --i) {
 		process.argv.splice(i, 1);
 	}
 	else if (arg.indexOf("--open=") > -1) {
-		var open = arg.substring(7);
+		let open = arg.substring(7);
 		if (open.indexOf('/') !== 0) {
 			open = '/' + open;
 		}
@@ -81,7 +81,7 @@ for (var i = process.argv.length - 1; i >= 2; --i) {
 		process.argv.splice(i, 1);
 	}
 	else if (arg.indexOf("--entry-file=") > -1) {
-		var file = arg.substring(13);
+		let file = arg.substring(13);
 		if (file.length) {
 			opts.file = file;
 			process.argv.splice(i, 1);
@@ -102,21 +102,21 @@ for (var i = process.argv.length - 1; i >= 2; --i) {
 	else if (arg.indexOf("--mount=") > -1) {
 		// e.g. "--mount=/components:./node_modules" will be ['/components', '<process.cwd()>/node_modules']
 		// split only on the first ":", as the path may contain ":" as well (e.g. C:\file.txt)
-		var match = arg.substring(8).match(/([^:]+):(.+)$/);
+		let match = arg.substring(8).match(/([^:]+):(.+)$/);
 		match[2] = path.resolve(process.cwd(), match[2]);
 		opts.mount.push([ match[1], match[2] ]);
 		process.argv.splice(i, 1);
 	}
 	else if (arg.indexOf("--wait=") > -1) {
-		var waitString = arg.substring(7);
-		var waitNumber = parseInt(waitString, 10);
+		let waitString = arg.substring(7);
+		let waitNumber = parseInt(waitString, 10);
 		if (waitNumber === +waitString) {
 			opts.wait = waitNumber;
 			process.argv.splice(i, 1);
 		}
 	}
 	else if (arg === "--version" || arg === "-v") {
-		var packageJson = require('./package.json');
+		let packageJson = require('./package.json');
 		console.log(packageJson.name, packageJson.version);
 		process.exit();
 	}
@@ -138,7 +138,7 @@ for (var i = process.argv.length - 1; i >= 2; --i) {
 	}
 	else if (arg.indexOf("--proxy=") > -1) {
 		// split only on the first ":", as the URL will contain ":" as well
-		var match = arg.substring(8).match(/([^:]+):(.+)$/);
+		let match = arg.substring(8).match(/([^:]+):(.+)$/);
 		opts.proxy.push([ match[1], match[2] ]);
 		process.argv.splice(i, 1);
 	}
@@ -158,7 +158,7 @@ for (var i = process.argv.length - 1; i >= 2; --i) {
 }
 
 // Patch paths
-var dir = opts.root = process.argv[2] || "";
+let dir = opts.root = process.argv[2] || "";
 
 if (opts.watch) {
 	opts.watch = opts.watch.map(function(relativePath) {
